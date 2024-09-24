@@ -14,7 +14,6 @@ env:
 
 jobs:
     # =============== ODOO COMMUNITY ==================
-    fixme: uncomment build-community job
     build-community:
         strategy:
             matrix:
