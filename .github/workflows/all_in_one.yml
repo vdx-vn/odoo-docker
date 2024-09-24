@@ -14,22 +14,24 @@ env:
 
 jobs:
     # =============== ODOO COMMUNITY ==================
-    build-community:
-        strategy:
-            matrix:
-                ref: [14, 15, 16, 17]
-        permissions:
-            contents: write
-        uses: ./.github/workflows/build.yml
-        with:
-            ref: ${{ matrix.ref }}
-            image_tag: odoo:${{ matrix.ref }}
-            version_code: ${{ matrix.ref }}.0
-        secrets: inherit
+    # fixme: uncomment build-community job
+    # build-community:
+    #     strategy:
+    #         matrix:
+    #             ref: [14, 15, 16, 17]
+    #     permissions:
+    #         contents: write
+    #     uses: ./.github/workflows/build.yml
+    #     with:
+    #         ref: ${{ matrix.ref }}
+    #         image_tag: odoo:${{ matrix.ref }}
+    #         version_code: ${{ matrix.ref }}.0
+    #     secrets: inherit
 
     # =============== ODOO ENTERPRISE ==================
     build-enterprise:
-        needs: [build-community]
+        # FIXME: uncomment 'needs' tag
+        # needs: [build-community]
         strategy:
             matrix:
                 ref: [14, 15, 16, 17]
