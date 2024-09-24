@@ -58,6 +58,7 @@ jobs:
                   get_latest_release_info
                   update_latest_release_to_dockerfile
 
+            # fixme: replace this action by core action
             - uses: stefanzweifel/git-auto-commit-action@v5
               with:
                   commit_message: Update latest release in Dockerfile

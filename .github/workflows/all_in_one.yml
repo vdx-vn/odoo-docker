@@ -34,7 +34,9 @@ jobs:
             matrix:
                 ref: [14, 15, 16, 17]
                 et_workspace_path: ["./et-addons"]
-        uses: ./.github/workflows/build-et.yml
+        # fixme: replace to old build-et if build-et-new not work
+        uses: ./.github/workflows/build-et-new.yml
+        # uses: ./.github/workflows/build-et.yml
         with:
             ref: ${{ matrix.ref }}
             image_tag: odoo-et:${{ matrix.ref }}

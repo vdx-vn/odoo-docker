@@ -1,0 +1,76 @@
+name: Checkout and build ET image # reusable workflow
+
+on:
+    workflow_call:
+        inputs:
+            ref:
+                required: true
+                type: string
+            image_tag:
+                required: true
+                type: string
+            et_workspace_path:
+                required: true
+                type: string
+
+        secrets:
+            DOCKERHUB_USERNAME:
+                required: true
+            DOCKERHUB_TOKEN:
+                required: true
+            ET_REPO_PATH:
+                required: true
+            ET_REPO_TOKEN:
+                required: true
+
+jobs:
+    build_and_push:
+        runs-on: ubuntu-latest
+        permissions:
+            packages: write
+            contents: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Check odoo/enterprise source
+              uses: actions/checkout@v4
+              with:
+                  repository: odoo/enterprise
+                  token: ${{ secrets.ET_REPO_TOKEN }}
+                  ref: ${{ inputs.ref }}.0
+                  fetch-depth: 1
+                  path: odoo-enterprise
+
+            - name: Checkout Enterprise source
+              uses: actions/checkout@v4
+              with:
+                  repository: ${{ secrets.ET_REPO_PATH }}
+                  token: ${{ secrets.ET_REPO_TOKEN }}
+                  path: ${{ inputs.et_workspace_path }}
+                  ref: ${{ inputs.ref }}
+                  fetch-depth: 1
+
+            - name: Copy odoo/enterprise to my source
+              run: |
+                  cp -rf odoo-enterprise/* ${{inputs.et_workspace_path}}/et-addons/
+
+            - uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: Update et source from odoo/enterprise
+                  repository: ${{inputs.et_workspace_path}}
+
+            - name: Login to container registry
+              run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u vdx-vn --password-stdin
+
+            # - name: Login to Docker Hub
+            #   uses: docker/login-action@v3
+            #   with:
+            #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+            #       password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build & Publish image
+              run: |
+                  cd ${{ inputs.et_workspace_path }}
+                  docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_tag }} .
+                  docker push ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_tag }}
