@@ -69,5 +69,5 @@ jobs:
             - name: Build & Publish image
               run: |
                   cd ${{ inputs.et_workspace_path }}
-                  docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_tag }} .
+                  docker build -t ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_tag }} .
                   docker push ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image_tag }}
