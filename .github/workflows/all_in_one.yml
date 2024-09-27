@@ -17,10 +17,10 @@ jobs:
     build-community:
         strategy:
             matrix:
-                ref: [14, 15, 16, 17]
+                ref: [15, 16, 17]
         permissions:
             contents: write
-        uses: ./.github/workflows/build-new.yml
+        uses: ./.github/workflows/build-community.yml
         with:
             ref: ${{ matrix.ref }}
             image_tag: odoo:${{ matrix.ref }}
@@ -32,11 +32,9 @@ jobs:
         needs: [build-community]
         strategy:
             matrix:
-                ref: [14, 15, 16, 17]
+                ref: [15, 16, 17]
                 et_workspace_path: ["./et-addons"]
-        # fixme: replace to old build-et if build-et-new not work
-        uses: ./.github/workflows/build-et-new.yml
-        # uses: ./.github/workflows/build-et.yml
+        uses: ./.github/workflows/build-enterprise.yml
         with:
             ref: ${{ matrix.ref }}
             image_tag: odoo-et:${{ matrix.ref }}
