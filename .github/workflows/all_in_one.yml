@@ -23,6 +23,7 @@ jobs:
         uses: ./.github/workflows/build-community.yml
         with:
             ref: ${{ matrix.ref }}
+            image_name: odoo
             image_tag: odoo:${{ matrix.ref }}
             version_code: ${{ matrix.ref }}.0
         secrets: inherit
@@ -37,6 +38,7 @@ jobs:
         uses: ./.github/workflows/build-enterprise.yml
         with:
             ref: ${{ matrix.ref }}
+            image_name: odoo-et
             image_tag: odoo-et:${{ matrix.ref }}
             et_workspace_path: ${{ matrix.et_workspace_path }}
         secrets: inherit
