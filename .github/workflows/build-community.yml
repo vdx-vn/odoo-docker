@@ -104,6 +104,7 @@ jobs:
                         org: "${{ env.registry_user }}",
                       });          
                       for (v of list_package_versions.data){
+                        console.log(v)
                         console.log(v.metadata)
                       }
 
