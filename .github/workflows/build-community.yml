@@ -85,8 +85,8 @@ jobs:
             #             -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
             #             -t ${{ env.docker_user }}/${{ inputs.image_tag }}
 
-            # - name: Login to GitHub container registry
-            #   run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
+            - name: Login to GitHub container registry
+              run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
 
             # - name: Publish image to GitHub container registry
             #   run: |
