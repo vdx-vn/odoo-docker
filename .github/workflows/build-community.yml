@@ -100,8 +100,8 @@ jobs:
                   script: |
                       const list_package_versions = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
                         package_type: "container",
-                        package_name: ${{ inputs.image_name }},
-                        org: ${{ env.registry_user }},
+                        package_name: "${{ inputs.image_name }}",
+                        org: "${{ env.registry_user }}",
                       });          
                       console.log(list_package_versions)
 
