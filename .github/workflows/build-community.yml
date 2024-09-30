@@ -103,7 +103,7 @@ jobs:
                         package_name: "${{ inputs.image_name }}",
                         org: "${{ env.registry_user }}",
                       });          
-                      for (v of list_package_versions){
+                      for (v of list_package_versions.data){
                         console.log(v.metadata)
                       }
 
