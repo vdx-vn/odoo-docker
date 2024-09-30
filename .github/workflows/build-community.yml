@@ -94,7 +94,7 @@ jobs:
 
             #       # fixme: remove untagged (old) image
             - name: Remove untagged (old) image on GitHub container registry
-              uses: actions/github-script@v3
+              uses: actions/github-script@v7
               with:
                   github-token: ${{ env.registry_token }}
                   script: |
