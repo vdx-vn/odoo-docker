@@ -90,6 +90,8 @@ jobs:
               run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
 
             - name: Publish image to GitHub container registry
+              # fixme: if there is no update, exit job success to prevent it fail the whole matrix cicd
+              continue-on-error: true
               run: |
                   docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
                   # fixme: remove untagged (old) image
