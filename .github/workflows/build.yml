@@ -6,12 +6,6 @@ on:
     push:
         branches: [build]
 
-env:
-    DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-    DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-    ET_REPO_PATH: ${{ secrets.ET_REPO_PATH }}
-    ET_REPO_TOKEN: ${{ secrets.ET_REPO_TOKEN }}
-
 jobs:
     # =============== ODOO COMMUNITY ==================
     build-community:

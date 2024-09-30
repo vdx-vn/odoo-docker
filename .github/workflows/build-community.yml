@@ -79,44 +79,25 @@ jobs:
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
 
-            # - name: Build image
-            #   run: |
-            #       docker build . \
-            #             -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
-            #             -t ${{ env.docker_user }}/${{ inputs.image_tag }}
+            - name: Build image
+              run: |
+                  docker build . \
+                        -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
+                        -t ${{ env.docker_user }}/${{ inputs.image_tag }}
 
             - name: Login to GitHub container registry
               run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
 
-            # - name: Publish image to GitHub container registry
-            #   run: |
-            #       docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
+            - name: Publish image to GitHub container registry
+              run: |
+                  docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
 
-            #       # fixme: remove untagged (old) image
-            - name: Remove untagged (old) image on GitHub container registry
-              uses: actions/github-script@v7
+            - name: Remove untagged (old) image from GitHub container registry
+              uses: ./.github/actions/delete-untagged-packages
               with:
-                  github-token: ${{ env.registry_token }}
-                  script: |
-                      const package_type = "container";
-                      const org = "${{ env.registry_user }}";
-                      const package_name = "${{ inputs.image_name }}";
-                      const list_package_versions = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
-                        package_type,
-                        package_name,
-                        org,
-                      });          
-                      for (v of list_package_versions.data){
-                        // check if the version is untagged
-                        if (v.metadata.container.tags.length == 0) {
-                            await github.rest.packages.deletePackageVersionForOrg({
-                                package_type,
-                                package_name,
-                                org,
-                                package_version_id: v.id,
-                            });                                                
-                        }
-                      }
+                  github_token: ${{ env.registry_token }}
+                  package_name: ${{ inputs.image_name }}
+                  organization: ${{ env.registry_user }}
 
             - name: Login to Docker Hub
               uses: docker/login-action@v3
