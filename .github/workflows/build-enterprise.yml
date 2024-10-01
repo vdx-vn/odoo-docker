@@ -28,7 +28,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: ${{ secrets.ET_REPO_PATH }}
-                  token: ${{ secrets.ET_REPO_TOKEN }}
+                  token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
                   path: ${{ inputs.et_workspace_path }}
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
