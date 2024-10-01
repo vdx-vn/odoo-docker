@@ -20,10 +20,9 @@ jobs:
     build_and_push:
         runs-on: ubuntu-latest
         env:
-            registry_user: ${{ secrets.CONTAINER_REGISTRY_GH_USER }}
-            registry_token: ${{ secrets.CONTAINER_REGISTRY_GH_TOKEN }}
-            docker_user: ${{ secrets.DOCKERHUB_USERNAME }}
-            docker_token: ${{ secrets.DOCKERHUB_TOKEN }}
+            package_manage_token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+            organization: ${{ vars.ORGANIZATION_NAME }}
+            repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -34,38 +33,21 @@ jobs:
             - name: Build image
               run: |
                   docker build . \
-                        -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
-                        -t ${{ env.docker_user }}/${{ inputs.image_tag }} \
-                        --label "org.opencontainers.image.source=https://github.com/vdx-vn/odoo-docker"
+                        --tag ghcr.io/${{ env.organization }}/${{ inputs.image_tag }} \
+                        --label "org.opencontainers.image.source=https://github.com/${{ env.organization }}/${{ env.repository }}"
 
-            # ============================================
-            # ======== GitHub container registry =========
-            # ============================================
             - name: Login to GitHub container registry
-              run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
+              run: echo "${{ env.package_manage_token }}" | docker login ghcr.io -u ${{ env.organization }} --password-stdin
 
             - name: Publish image to GitHub container registry
               run: |
-                  docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
+                  docker push ghcr.io/${{ env.organization }}/${{ inputs.image_tag }}
 
             - uses: actions/checkout@v4
 
             - name: Remove untagged (old) image from GitHub container registry
               uses: ./.github/actions/delete-untagged-packages
               with:
-                  github_token: ${{ env.registry_token }}
+                  github_token: ${{ env.package_manage_token }}
                   package_name: ${{ inputs.image_name }}
-                  organization: ${{ env.registry_user }}
-
-            # ============================================
-            # ================ Docker Hub ================
-            # ============================================
-            - name: Login to Docker Hub
-              uses: docker/login-action@v3
-              with:
-                  username: ${{ env.docker_user }}
-                  password: ${{ env.docker_token }}
-
-            - name: Publish image to Docker Hub
-              run: |
-                  docker push ${{ env.docker_user }}/${{ inputs.image_tag }}
+                  organization: ${{ env.organization }}
