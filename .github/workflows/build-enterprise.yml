@@ -1,4 +1,4 @@
-name: Checkout and build ET image # reusable workflow
+name: Checkout and build ET image
 
 on:
     workflow_call:

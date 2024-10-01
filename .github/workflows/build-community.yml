@@ -1,4 +1,4 @@
-name: Checkout and build image # reusable workflow
+name: Checkout and build image
 
 on:
     workflow_call:
