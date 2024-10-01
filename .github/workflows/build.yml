@@ -8,32 +8,32 @@ on:
 
 jobs:
     # =============== ODOO COMMUNITY ==================
-    update-source-community:
-        strategy:
-            matrix:
-                ref: [15, 16, 17]
-        permissions:
-            contents: write
-        uses: ./.github/workflows/update-community.yml
-        with:
-            ref: ${{ matrix.ref }}
-            version_code: ${{ matrix.ref }}.0
-        secrets: inherit
+    # update-source-community:
+    #     strategy:
+    #         matrix:
+    #             ref: [15, 16, 17]
+    #     permissions:
+    #         contents: write
+    #     uses: ./.github/workflows/update-community.yml
+    #     with:
+    #         ref: ${{ matrix.ref }}
+    #         version_code: ${{ matrix.ref }}.0
+    #     secrets: inherit
 
-    build-community:
-        needs: update-source-community
-        strategy:
-            matrix:
-                ref: [15, 16, 17]
-        permissions:
-            contents: write
-        uses: ./.github/workflows/build-community.yml
-        with:
-            ref: ${{ matrix.ref }}
-            image_name: odoo
-            image_tag: odoo:${{ matrix.ref }}
-            version_code: ${{ matrix.ref }}.0
-        secrets: inherit
+    # build-community:
+    #     needs: update-source-community
+    #     strategy:
+    #         matrix:
+    #             ref: [15, 16, 17]
+    #     permissions:
+    #         contents: write
+    #     uses: ./.github/workflows/build-community.yml
+    #     with:
+    #         ref: ${{ matrix.ref }}
+    #         image_name: odoo
+    #         image_tag: odoo:${{ matrix.ref }}
+    #         version_code: ${{ matrix.ref }}.0
+    #     secrets: inherit
 
     # =============== ODOO ENTERPRISE ==================
     update-source-enterprise:
@@ -50,16 +50,16 @@ jobs:
             et_workspace_path: ${{ matrix.et_workspace_path }}
         secrets: inherit
 
-    build-enterprise:
-        needs: [update-source-enterprise, build-community]
-        strategy:
-            matrix:
-                ref: [15, 16, 17]
-                et_workspace_path: ["./et-addons"]
-        uses: ./.github/workflows/build-enterprise.yml
-        with:
-            ref: ${{ matrix.ref }}
-            image_name: odoo-ent
-            image_tag: odoo-ent:${{ matrix.ref }}
-            et_workspace_path: ${{ matrix.et_workspace_path }}
-        secrets: inherit
+    # build-enterprise:
+    #     needs: [update-source-enterprise, build-community]
+    #     strategy:
+    #         matrix:
+    #             ref: [15, 16, 17]
+    #             et_workspace_path: ["./et-addons"]
+    #     uses: ./.github/workflows/build-enterprise.yml
+    #     with:
+    #         ref: ${{ matrix.ref }}
+    #         image_name: odoo-ent
+    #         image_tag: odoo-ent:${{ matrix.ref }}
+    #         et_workspace_path: ${{ matrix.et_workspace_path }}
+    #     secrets: inherit
