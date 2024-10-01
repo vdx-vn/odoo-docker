@@ -41,7 +41,8 @@ jobs:
 
             - name: Copy odoo/enterprise to my source
               run: |
-                  cp -rf odoo-enterprise/. ${{inputs.et_workspace_path}}/et-addons/
+                  rm -rf ${{inputs.et_workspace_path}}/et-addons
+                  mv odoo-enterprise ${{inputs.et_workspace_path}}/et-addons
 
             - name: Push change to remote
               continue-on-error: true
