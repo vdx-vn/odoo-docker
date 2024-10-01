@@ -17,56 +17,8 @@ on:
                 type: string
 
 jobs:
-    commit-latest-release:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ inputs.ref }}
-                  fetch-depth: 1
-
-            - name: Get release bash from nightly server
-              run: |
-                  function get_latest_release_info {
-                      file_name="odoo_${odoo_version_code}.latest_amd64.changes"
-                      url="https://nightly.odoo.com/${odoo_version_code}/nightly/deb/${file_name}"
-                      curl -O $url
-
-                      start_line_content="Checksums-Sha1:"
-                      line_number=$(grep -n "$start_line_content" "$file_name" | awk -F ':' '{print $1}')
-                      latest_release_info_line_number=$(($line_number + 3))
-                      latest_release_info=$(sed -n "${latest_release_info_line_number}p" "$file_name")
-                      latest_release_info=$(echo "$latest_release_info" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-                      words=($latest_release_info)
-
-                      declare -g release_checksum=${words[0]}
-                      declare -g release_date=$(echo ${words[2]} | grep -o "[0-9]\{8\}")
-                      rm -rf $file_name
-                  }
-
-                  function update_latest_release_to_dockerfile {
-                      sed -i "s/^\s*ARG ODOO_RELEASE\s*.*/ARG ODOO_RELEASE=${release_date}/g" $docker_file_path
-                      sed -i "s/^\s*ARG ODOO_SHA\s*.*/ARG ODOO_SHA=${release_checksum}/g" $docker_file_path
-                  }
-
-                  odoo_version_code=${{ inputs.version_code }}
-                  docker_file_path=${{ github.workspace }}/Dockerfile
-
-                  get_latest_release_info
-                  update_latest_release_to_dockerfile
-
-            - name: Push change to remote
-              continue-on-error: true
-              run: |
-                  git config --global user.name "TruongPX"
-                  git config --global user.email "truong@vdx.vn"
-                  git commit -am "Update latest release for Odoo community: $(date +'%d/%m/%Y')"
-                  git push
-
     build_and_push:
         runs-on: ubuntu-latest
-        needs: [commit-latest-release]
         env:
             registry_user: ${{ secrets.CONTAINER_REGISTRY_GH_USER }}
             registry_token: ${{ secrets.CONTAINER_REGISTRY_GH_TOKEN }}
@@ -85,6 +37,9 @@ jobs:
                         -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
                         -t ${{ env.docker_user }}/${{ inputs.image_tag }}
 
+            # ============================================
+            # ======== GitHub container registry =========
+            # ============================================
             - name: Login to GitHub container registry
               run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
 
@@ -92,8 +47,7 @@ jobs:
               run: |
                   docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
 
-            - name: Checkout
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
 
             - name: Remove untagged (old) image from GitHub container registry
               uses: ./.github/actions/delete-untagged-packages
@@ -102,6 +56,9 @@ jobs:
                   package_name: ${{ inputs.image_name }}
                   organization: ${{ env.registry_user }}
 
+            # ============================================
+            # ================ Docker Hub ================
+            # ============================================
             - name: Login to Docker Hub
               uses: docker/login-action@v3
               with:

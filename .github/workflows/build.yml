@@ -8,7 +8,20 @@ on:
 
 jobs:
     # =============== ODOO COMMUNITY ==================
+    update-source-community:
+        strategy:
+            matrix:
+                ref: [15, 16, 17]
+        permissions:
+            contents: write
+        uses: ./.github/workflows/update-community.yml
+        with:
+            ref: ${{ matrix.ref }}
+            version_code: ${{ matrix.ref }}.0
+        secrets: inherit
+
     build-community:
+        needs: update-source-community
         strategy:
             matrix:
                 ref: [15, 16, 17]
@@ -23,8 +36,22 @@ jobs:
         secrets: inherit
 
     # =============== ODOO ENTERPRISE ==================
+    update-source-enterprise:
+        strategy:
+            matrix:
+                ref: [9, 10, 11, 12, 13, 14, 15, 16, 17]
+                et_workspace_path: ["./et-addons"]
+        permissions:
+            contents: write
+        uses: ./.github/workflows/update-enterprise.yml
+        with:
+            ref: ${{ matrix.ref }}
+            original_ref: ${{ matrix.ref }}.0
+            et_workspace_path: ${{ matrix.et_workspace_path }}
+        secrets: inherit
+
     build-enterprise:
-        needs: [build-community]
+        needs: [update-source-enterprise, build-community]
         strategy:
             matrix:
                 ref: [15, 16, 17]

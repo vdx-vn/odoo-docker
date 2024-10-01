@@ -1,0 +1,53 @@
+name: Checkout and build ET image
+
+on:
+    workflow_call:
+        inputs:
+            ref:
+                required: true
+                type: string
+            original_ref:
+                required: true
+                type: string
+            et_workspace_path:
+                required: true
+                type: string
+
+jobs:
+    build_and_push:
+        runs-on: ubuntu-latest
+        # fixme: try to use default token (no need to provide it in actions/checkout inputs)
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Check original odoo/enterprise source
+              uses: actions/checkout@v4
+              with:
+                  repository: odoo/enterprise
+                  token: ${{ secrets.ET_REPO_TOKEN }}
+                  ref: ${{ inputs.original_ref }}
+                  fetch-depth: 1
+                  path: odoo-enterprise
+
+            - name: Checkout Enterprise source
+              uses: actions/checkout@v4
+              with:
+                  repository: ${{ secrets.ET_REPO_PATH }}
+                  token: ${{ secrets.ET_REPO_TOKEN }}
+                  path: ${{ inputs.et_workspace_path }}
+                  ref: ${{ inputs.ref }}
+                  fetch-depth: 1
+
+            - name: Copy odoo/enterprise to my source
+              run: |
+                  cp -rf odoo-enterprise/* ${{inputs.et_workspace_path}}/et-addons/
+
+            - name: Push change to remote
+              continue-on-error: true
+              run: |
+                  cd ${{inputs.et_workspace_path}}
+                  git config --global user.name "TruongPX"
+                  git config --global user.email "truong@vdx.vn"
+                  git commit -am "Update latest release for Odoo enterprise: $(date +'%d/%m/%Y')"
+                  git push
