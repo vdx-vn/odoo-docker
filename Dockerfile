@@ -84,5 +84,7 @@ COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 COPY ./requirements.txt /etc/odoo/requirements.txt
 RUN pip3 install -r /etc/odoo/requirements.txt
 
+LABEL org.opencontainers.image.source=https://github.com/vdx-vn/odoo-docker
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
