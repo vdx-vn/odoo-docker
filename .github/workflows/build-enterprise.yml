@@ -34,6 +34,9 @@ jobs:
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
 
+            - name: Login to GitHub container registry
+              run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
+
             - name: Build image
               run: |
                   cd ${{ inputs.et_workspace_path }}
@@ -44,9 +47,6 @@ jobs:
             # ============================================
             # ======== GitHub container registry =========
             # ============================================
-            - name: Login to GitHub container registry
-              run: echo "${{ env.registry_token }}" | docker login ghcr.io -u ${{ env.registry_user }} --password-stdin
-
             - name: Publish image to GitHub container registry
               run: |
                   docker push ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }}
