@@ -20,7 +20,7 @@ jobs:
     build_and_push:
         runs-on: ubuntu-latest
         env:
-            package_manage_token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+            package_manage_token: ${{ secrets.GH_TOKEN }}
             organization: ${{ vars.ORGANIZATION_NAME }}
             repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
         steps:

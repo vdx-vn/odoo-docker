@@ -14,7 +14,7 @@ on:
                 type: string
 
 jobs:
-    build_and_push:
+    update-latest-enterprise-source:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -24,7 +24,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: odoo/enterprise
-                  token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+                  token: ${{ secrets.GH_TOKEN }}
                   ref: ${{ inputs.original_ref }}
                   fetch-depth: 1
                   path: odoo-enterprise
@@ -32,8 +32,8 @@ jobs:
             - name: Checkout Enterprise source
               uses: actions/checkout@v4
               with:
-                  repository: ${{ secrets.ET_REPO_PATH }}
-                  token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+                  repository: ${{ vars.ORGANIZATION_NAME }}/${{ vars.ENTERPRISE_DOCKER_REPOSITORY }}
+                  token: ${{ secrets.GH_TOKEN }}
                   path: ${{ inputs.et_workspace_path }}
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1

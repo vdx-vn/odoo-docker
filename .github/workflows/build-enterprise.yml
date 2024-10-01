@@ -20,15 +20,15 @@ jobs:
     build_and_push:
         runs-on: ubuntu-latest
         env:
-            package_manage_token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+            package_manage_token: ${{ secrets.GH_TOKEN }}
             organization: ${{ vars.ORGANIZATION_NAME }}
             repository: ${{ vars.ENTERPRISE_DOCKER_REPOSITORY }}
         steps:
             - name: Checkout Enterprise source
               uses: actions/checkout@v4
               with:
-                  repository: ${{ secrets.ET_REPO_PATH }}
-                  token: ${{ secrets.MANAGE_GH_PACKAGE_TOKEN }}
+                  repository: ${{ vars.ORGANIZATION_NAME }}/${{ vars.ENTERPRISE_DOCKER_REPOSITORY }}
+                  token: ${{ secrets.GH_TOKEN }}
                   path: ${{ inputs.et_workspace_path }}
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
