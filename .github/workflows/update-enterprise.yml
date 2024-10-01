@@ -41,6 +41,11 @@ jobs:
 
             - name: Copy odoo/enterprise to my source
               run: |
+                  echo "=============>>>>>>>>>>>>>>>>>>>>>>>>>"
+                  ls -lah ${{inputs.et_workspace_path}}/et-addons 
+                  echo "=============>>>>>>>>>>>>>>>>>>>>>>>>>"
+                  ls -lah odoo-enterprise
+                  echo "=============>>>>>>>>>>>>>>>>>>>>>>>>>"
                   rm -rf ${{inputs.et_workspace_path}}/et-addons
                   mv odoo-enterprise ${{inputs.et_workspace_path}}/et-addons
 
