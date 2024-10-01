@@ -99,7 +99,5 @@ RUN pip3 install -r /etc/odoo/requirements.txt
 
 USER root
 
-LABEL org.opencontainers.image.source=https://github.com/vdx-vn/odoo-docker
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
