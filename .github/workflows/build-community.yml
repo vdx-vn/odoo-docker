@@ -35,7 +35,8 @@ jobs:
               run: |
                   docker build . \
                         -t ghcr.io/${{ env.registry_user }}/${{ inputs.image_tag }} \
-                        -t ${{ env.docker_user }}/${{ inputs.image_tag }}
+                        -t ${{ env.docker_user }}/${{ inputs.image_tag }} \
+                        --label "org.opencontainers.image.source=https://github.com/vdx-vn/odoo-docker"
 
             # ============================================
             # ======== GitHub container registry =========
