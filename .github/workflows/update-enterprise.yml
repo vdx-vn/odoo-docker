@@ -16,7 +16,6 @@ on:
 jobs:
     build_and_push:
         runs-on: ubuntu-latest
-        # fixme: try to use default token (no need to provide it in actions/checkout inputs)
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -25,8 +24,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: odoo/enterprise
-                  # token: ${{ secrets.ET_REPO_TOKEN }}
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.ET_REPO_TOKEN }}
                   ref: ${{ inputs.original_ref }}
                   fetch-depth: 1
                   path: odoo-enterprise
@@ -35,8 +33,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: ${{ secrets.ET_REPO_PATH }}
-                  # token: ${{ secrets.ET_REPO_TOKEN }}
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.ET_REPO_TOKEN }}
                   path: ${{ inputs.et_workspace_path }}
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
