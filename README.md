@@ -1,6 +1,6 @@
 # Odoo community Docker images
 
-- Odoo version: 17
+- Odoo version: 18
 - Postgres version: 16
 
 ## Prerequisite and Installation
@@ -19,14 +19,14 @@ Install docker and docker compose
 
     ```shell
     cd $ODOO_DOCKER_PATH/dockerfile
-    docker build -f Dockerfile --pull -t xmars/odoo:17 .
+    docker build -f Dockerfile --pull -t xmars/odoo:18 .
     ```
 
 2. _(Optionally)_ Push newly image to Docker hub
 
     ```shell
     docker login
-    docker push xmars/odoo:17
+    docker push xmars/odoo:18
     ```
 
 3. _(Optionally)_ if you want to install some libs, edit file [requirements.txt](requirements.txt) and [entrypoint.sh](entrypoint.sh) and rebuild the image
