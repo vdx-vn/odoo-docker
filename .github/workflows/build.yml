@@ -11,7 +11,7 @@ jobs:
     update-source-community:
         strategy:
             matrix:
-                ref: [15, 16, 17]
+                ref: [15, 16, 17, 18]
         permissions:
             contents: write
         uses: ./.github/workflows/update-community.yml
@@ -24,7 +24,7 @@ jobs:
         needs: update-source-community
         strategy:
             matrix:
-                ref: [15, 16, 17]
+                ref: [15, 16, 17, 18]
         permissions:
             contents: write
         uses: ./.github/workflows/build-community.yml
@@ -39,7 +39,7 @@ jobs:
     update-source-enterprise:
         strategy:
             matrix:
-                ref: [9, 10, 11, 12, 13, 14, 15, 16, 17]
+                ref: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
                 et_workspace_path: ["./et-addons"]
         permissions:
             contents: write
@@ -54,7 +54,7 @@ jobs:
         needs: [update-source-enterprise, build-community]
         strategy:
             matrix:
-                ref: [15, 16, 17]
+                ref: [15, 16, 17, 18]
                 et_workspace_path: ["./et-addons"]
         uses: ./.github/workflows/build-enterprise.yml
         with:
