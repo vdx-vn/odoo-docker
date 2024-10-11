@@ -98,6 +98,9 @@ COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 COPY ./requirements.txt /etc/odoo/requirements.txt
 RUN pip3 install -r /etc/odoo/requirements.txt --break-system-packages
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends zip
+
 USER root
 
 ENTRYPOINT ["/entrypoint.sh"]
