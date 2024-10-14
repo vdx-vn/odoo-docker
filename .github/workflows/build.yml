@@ -35,6 +35,21 @@ jobs:
             version_code: ${{ matrix.ref }}.0
         secrets: inherit
 
+    delete-untagged-community-images:
+        runs-on: ubuntu-latest
+        env:
+            package_manage_token: ${{ secrets.GH_TOKEN }}
+            organization: ${{ vars.ORGANIZATION_NAME }}
+            repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Remove untagged (old) image from GitHub container registry
+              uses: ./.github/actions/delete-untagged-packages
+              with:
+                  github_token: ${{ env.package_manage_token }}
+                  package_name: odoo
+                  organization: ${{ env.organization }}
+
     # =============== ODOO ENTERPRISE ==================
     update-source-enterprise:
         strategy:
@@ -63,3 +78,18 @@ jobs:
             image_tag: odoo-ent:${{ matrix.ref }}
             et_workspace_path: ${{ matrix.et_workspace_path }}
         secrets: inherit
+
+    delete-untagged-enterprise-images:
+        runs-on: ubuntu-latest
+        env:
+            package_manage_token: ${{ secrets.GH_TOKEN }}
+            organization: ${{ vars.ORGANIZATION_NAME }}
+            repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
+        steps:
+            - uses: actions/checkout@v4
+            - name: Remove untagged (old) image from GitHub container registry
+              uses: ./.github/actions/delete-untagged-packages
+              with:
+                  github_token: ${{ env.package_manage_token }}
+                  package_name: odoo-ent
+                  organization: ${{ env.organization }}

@@ -46,12 +46,3 @@ jobs:
             - name: Publish image to GitHub container registry
               run: |
                   docker push ghcr.io/${{ env.organization }}/${{ inputs.image_tag }}
-
-            - uses: actions/checkout@v4
-
-            - name: Remove untagged (old) image from GitHub container registry
-              uses: ./.github/actions/delete-untagged-packages
-              with:
-                  github_token: ${{ env.package_manage_token }}
-                  package_name: ${{ inputs.image_name }}
-                  organization: ${{ env.organization }}
