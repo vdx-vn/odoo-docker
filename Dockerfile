@@ -100,7 +100,7 @@ RUN pip3 install -r /etc/odoo/requirements.txt
 USER root
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends zip
+    apt-get install -y --no-install-recommends zip unzip
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
