@@ -11,7 +11,7 @@ jobs:
     update-source-community:
         strategy:
             matrix:
-                ref: [15, 16, 17, 18]
+                ref: [14, 15, 16, 17, 18]
         permissions:
             contents: write
         uses: ./.github/workflows/update-community.yml
@@ -24,7 +24,7 @@ jobs:
         needs: update-source-community
         strategy:
             matrix:
-                ref: [15, 16, 17, 18]
+                ref: [14, 15, 16, 17, 18]
         permissions:
             contents: write
         uses: ./.github/workflows/build-community.yml
