@@ -43,13 +43,15 @@ jobs:
             organization: ${{ vars.ORGANIZATION_NAME }}
             repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
         steps:
-            - uses: actions/checkout@v4
             - name: Remove untagged (old) image from GitHub container registry
-              uses: ./.github/actions/delete-untagged-packages
+              uses: actions/delete-package-versions@v5
               with:
-                  github_token: ${{ env.package_manage_token }}
-                  package_name: odoo
-                  organization: ${{ env.organization }}
+                  owner: ${{ env.organization }}
+                  package-name: "odoo"
+                  package-type: "container"
+                  token: ${{ env.package_manage_token }}
+                  min-versions-to-keep: 0
+                  delete-only-untagged-versions: "true"
 
     # =============== ODOO ENTERPRISE ==================
     update-source-enterprise:
@@ -88,7 +90,8 @@ jobs:
             organization: ${{ vars.ORGANIZATION_NAME }}
             repository: ${{ vars.COMMUNITY_DOCKER_REPOSITORY }}
         steps:
-            - uses: actions/delete-package-versions@v5
+            - name: Remove untagged (old) image from GitHub container registry
+              uses: actions/delete-package-versions@v5
               with:
                   owner: ${{ env.organization }}
                   package-name: "odoo-ent"
