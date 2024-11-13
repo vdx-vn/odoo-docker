@@ -1,1 +1,1 @@
-# Automatic build and publish Odoo images Github Package Registry
+### Automatic build and publish Odoo images Github Package Registry
