@@ -70,6 +70,7 @@ jobs:
 
     build-enterprise:
         needs: [update-source-enterprise, build-community]
+        if: always()
         strategy:
             matrix:
                 ref: [15, 16, 17, 18]
@@ -85,6 +86,7 @@ jobs:
     delete-untagged-enterprise-images:
         runs-on: ubuntu-latest
         needs: build-enterprise
+        if: always()
         env:
             package_manage_token: ${{ secrets.GH_TOKEN }}
             organization: ${{ vars.ORGANIZATION_NAME }}
@@ -99,10 +101,3 @@ jobs:
                   token: ${{ env.package_manage_token }}
                   min-versions-to-keep: 0
                   delete-only-untagged-versions: "true"
-
-            # - name: Remove untagged (old) image from GitHub container registry
-            #   uses: ./.github/actions/delete-untagged-packages
-            #   with:
-            #       github_token: ${{ env.package_manage_token }}
-            #       package_name: odoo-ent
-            #       organization: ${{ env.organization }}
