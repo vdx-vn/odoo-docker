@@ -3,7 +3,7 @@
 set -e
 
 if [ -v PASSWORD_FILE ]; then
-    PASSWORD="$(< $PASSWORD_FILE)"
+    PASSWORD="$(<$PASSWORD_FILE)"
 fi
 
 # set the postgres database host, port, user and password according to the environment
@@ -28,22 +28,33 @@ check_config "db_port" "$PORT"
 check_config "db_user" "$USER"
 check_config "db_password" "$PASSWORD"
 
+# get 'command' from config file
+COMMAND_PARAM_NAME="command"
+COMMAND=
+function get_additional_command() {
+    if grep -q -E "^\s*\b${COMMAND_PARAM_NAME}\b\s*=" "$ODOO_RC"; then
+        COMMAND=$(grep -E "^\s*\b${COMMAND_PARAM_NAME}\b\s*=" "$ODOO_RC" | cut -d "=" -f2 | sed 's/[\n\r]//g')
+    fi
+}
+get_additional_command
+
 case "$1" in
-    -- | odoo)
-        shift
-        if [[ "$1" == "scaffold" ]] ; then
-            exec odoo "$@"
-        else
-            wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-            exec odoo "$@" "${DB_ARGS[@]}"
-        fi
-        ;;
-    -*)
+-- | odoo)
+    shift
+    if [[ "$1" == "scaffold" ]]; then
+        exec odoo "$@"
+    else
         wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-        exec odoo "$@" "${DB_ARGS[@]}"
-        ;;
-    *)
-        exec "$@"
+        exec odoo "$@" "${DB_ARGS[@]}" $COMMAND
+    fi
+    ;;
+-*)
+    wait-for-psql.py ${DB_ARGS[@]} --timeout=30
+    exec odoo "$@" "${DB_ARGS[@]}" $COMMAND
+    ;;
+*)
+    exec "$@"
+    ;;
 esac
 
 exit 1
