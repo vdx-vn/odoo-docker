@@ -36,10 +36,15 @@ jobs:
             - name: Login to GitHub container registry
               run: echo "${{ env.package_manage_token }}" | docker login ghcr.io -u ${{ env.organization }} --password-stdin
 
+            # Without attestations the tag is a single manifest. With them it is an
+            # index whose children are untagged versions, which build.yml's
+            # delete-untagged cleanup removes, leaving the tag unpullable.
             - name: Build image
               run: |
                   cd ${{ inputs.et_workspace_path }}
                   docker build . \
+                        --provenance=false \
+                        --sbom=false \
                         --tag ghcr.io/${{ env.organization }}/${{ inputs.image_tag }} \
                         --label "org.opencontainers.image.source=https://github.com/${{ env.organization }}/${{ env.repository }}"
 

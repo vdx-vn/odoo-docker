@@ -30,9 +30,14 @@ jobs:
                   ref: ${{ inputs.ref }}
                   fetch-depth: 1
 
+            # Without attestations the tag is a single manifest. With them it is an
+            # index whose children are untagged versions, which build.yml's
+            # delete-untagged cleanup removes, leaving the tag unpullable.
             - name: Build image
               run: |
                   docker build . \
+                        --provenance=false \
+                        --sbom=false \
                         --tag ghcr.io/${{ env.organization }}/${{ inputs.image_tag }} \
                         --label "org.opencontainers.image.source=https://github.com/${{ env.organization }}/${{ env.repository }}"
 
