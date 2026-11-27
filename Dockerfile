@@ -70,9 +70,9 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ noble-pgdg main' > /etc/a
 RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 19.0
+ENV ODOO_VERSION 20.0
 ARG ODOO_RELEASE=20261127
-ARG ODOO_SHA=28b44d689b354644479c600bf710376f923faa95
+ARG ODOO_SHA=23ea993db6cf059081cec465bee8abad7ee4ef67
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
     && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
     && apt-get update \
